@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gym Tracker</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 1rem auto; padding: 0 1rem; }
+    input, button { font-size: 1rem; padding: .6rem; margin: .25rem 0; width: 100%; box-sizing: border-box; }
+    li { margin: .4rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Gym Tracker</h1>
+  <input id="exercise" placeholder="Exercise (e.g. Squat)">
+  <input id="weight" type="number" placeholder="Weight (kg)">
+  <input id="reps" type="number" placeholder="Reps">
+  <button onclick="addEntry()">Add set</button>
+  <ul id="log"></ul>
+
+  <script>
+    let entries = JSON.parse(localStorage.getItem("entries") || "[]");
+
+    function addEntry() {
+      const e = {
+        date: new Date().toLocaleDateString(),
+        exercise: document.getElementById("exercise").value,
+        weight: document.getElementById("weight").value,
+        reps: document.getElementById("reps").value
+      };
+      if (!e.exercise) return;
+      entries.push(e);
+      localStorage.setItem("entries", JSON.stringify(entries));
+      render();
+    }
+
+    function render() {
+      document.getElementById("log").innerHTML = entries
+        .slice().reverse()
+        .map(e => `<li>${e.date}: ${e.exercise} - ${e.weight}kg x ${e.reps}</li>`)
+        .join("");
+    }
+    render();
+  </script>
+</body>
+</html>
